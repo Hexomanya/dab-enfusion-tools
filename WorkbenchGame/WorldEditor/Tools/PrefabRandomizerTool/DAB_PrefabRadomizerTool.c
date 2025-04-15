@@ -94,14 +94,14 @@ class DAB_PrefabRadomizerTool : WorldEditorTool
 		
 		m_API.EndEntityAction();
 		
-		DAB_Helper.SetEntitySelection(finalEntities);
+		DAB_EntityHelper.SetEntitySelection(finalEntities);
 	}
 	
 	//------------------------------------------------------------------------------------------------
 	private void GetAllEntitiesToReplace(notnull inout array<IEntitySource> output)
 	{
 		array<IEntitySource> selection = {};
-		DAB_Helper.GetFlattendSelectedHierachy(selection);
+		DAB_EntityHelper.GetFlattendSelectedHierachy(selection);
 	
 		output.Clear();	
 		
@@ -273,10 +273,10 @@ class DAB_PrefabRadomizerTool : WorldEditorTool
 		m_prefabConfigIndexMap.Clear();
 		array<IEntitySource> entitiesToReplace = {};
 		
-		DAB_Helper.GetFlattendSelectedHierachy(entitiesToReplace);
+		DAB_EntityHelper.GetFlattendSelectedHierachy(entitiesToReplace);
 		GetEntitySelection(entitiesToReplace);
 		
-		DAB_Helper.SetEntitySelection(entitiesToReplace);
+		DAB_EntityHelper.SetEntitySelection(entitiesToReplace);
 	}
 	
 	//------------------------------------------------------------------------------------------------

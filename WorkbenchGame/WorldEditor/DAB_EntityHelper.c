@@ -1,9 +1,9 @@
-class DAB_Helper
+class DAB_EntityHelper
 {
 	//------------------------------------------------------------------------------------------------
 	static void GetAllChildrenOfType(typename searchType, notnull IEntitySource parent, notnull inout array<IEntitySource> output){
 		array<IEntitySource> allEntities = {};
-		DAB_Helper.ExtractFromParent(parent, allEntities);
+		DAB_EntityHelper.ExtractFromParent(parent, allEntities);
 
 		for(int i = 0; i < allEntities.Count(); i++){
 			IEntitySource src = allEntities[i];
@@ -17,7 +17,7 @@ class DAB_Helper
 	static void GetAllSelectedEntitiesOfType(typename searchType, notnull inout array<IEntitySource> output)
 	{
 		array<IEntitySource> allSelected = {};
-		DAB_Helper.GetFlattendSelectedHierachy(allSelected);
+		DAB_EntityHelper.GetFlattendSelectedHierachy(allSelected);
 
 		for(int i = 0; i < allSelected.Count(); i++){
 			IEntitySource src = allSelected[i];
@@ -33,7 +33,7 @@ class DAB_Helper
 		
 		for(int i = 0; i < api.GetSelectedEntitiesCount(); i++){
 			IEntitySource parent = api.GetSelectedEntity(i);
-			DAB_Helper.ExtractFromParent(parent, output);	
+			DAB_EntityHelper.ExtractFromParent(parent, output);	
 		}
 	}
 	
@@ -47,7 +47,7 @@ class DAB_Helper
 			if(child.GetNumChildren() == 0){
 				output.Insert(child);
 			} else {
-				DAB_Helper.ExtractFromParent(child, output);
+				DAB_EntityHelper.ExtractFromParent(child, output);
 			}
 		}
 	}

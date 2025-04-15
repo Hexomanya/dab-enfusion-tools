@@ -2,34 +2,17 @@
 [WorkbenchToolAttribute("(Fixed) Polyline Area Tool", "Turns polylines into polyline areas, select a polyline, then click 'Convert'", awesomeFontCode: 0xF6C8)]
 class DAB_PolylineAreaTool : WorldEditorTool
 {
-	[Attribute("5")]
+	[Attribute(defvalue: "5", category: "Rectangle Settings")]
 	protected float m_fRectangleWidth;
 
-	[Attribute("3")]
+	[Attribute(defvalue: "3", category: "Rectangle Settings")]
 	protected float m_fRectangleHeight;
 
-	[Attribute("3")]
+	[Attribute(defvalue: "3", category: "Circle Settings")]
 	protected float m_fCircleRadius;
 
-	[Attribute("16")]
+	[Attribute(defvalue: "16", category: "Circle Settings")]
 	protected float m_fCircleSegments;
-
-	//------------------------------------------------------------------------------------------------
-	protected void ModifyPolyline(IEntitySource entSrc, array<vector> points)
-	{
-		BaseContainerList oldPoints = entSrc.GetObjectArray("Points");
-		
-		for(int i = (oldPoints.Count() - 1); i >= 0; i--)
-		{
-			m_API.RemoveObjectArrayVariableMember(entSrc, null, "Points", i);
-		}
-
-		foreach (int i, vector point : points)
-		{
-			m_API.CreateObjectArrayVariableMember(entSrc, null, "Points", "ShapePoint", i);
-			m_API.SetVariableValue(entSrc, { new ContainerIdPathEntry("Points", i) }, "Position", string.Format("%1 %2 %3", point[0], point[1], point[2]));
-		}
-	}
 
 	//------------------------------------------------------------------------------------------------
 	[ButtonAttribute("Turn to Rect")]
@@ -61,7 +44,8 @@ class DAB_PolylineAreaTool : WorldEditorTool
 		positions.Insert(upperLeft);
 
 		m_API.BeginEntityAction("", "");
-		ModifyPolyline(entSrc, positions);
+		DAB_ShapeHelper.ModifyPolyline(entSrc, positions);
+		DAB_ShapeHelper.FixTerrainAdjustmentGenerators(entSrc);
 		m_API.EndEntityAction("");
 	}
 
@@ -87,7 +71,8 @@ class DAB_PolylineAreaTool : WorldEditorTool
 		}
 
 		m_API.BeginEntityAction("", "");
-		ModifyPolyline(entSrc, positions);
+		DAB_ShapeHelper.ModifyPolyline(entSrc, positions);
+		DAB_ShapeHelper.FixTerrainAdjustmentGenerators(entSrc);
 		m_API.EndEntityAction("");
 	}
 

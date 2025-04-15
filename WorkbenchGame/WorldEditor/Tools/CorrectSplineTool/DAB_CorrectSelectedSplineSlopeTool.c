@@ -1,20 +1,23 @@
 #ifdef WORKBENCH
 
 enum FixedSplineEndPoint {
-	FIX_SOURCE, //Top to Bottm
-	FIX_END, //Bottom to Top
+	FIX_HEIGHEST_POINT, //Top to Bottm
+	FIX_LOWEST_POINT, //Bottom to Top
 }
 
-[WorkbenchToolAttribute( name: "Correct Spline Slope", description: "Clamps the local slope on each spline point. And that rivers don't flow up. Make sure that end and start are at the correct elevation.", wbModules: {"WorldEditor"}, awesomeFontCode:0xf773)]
+[WorkbenchToolAttribute( name: "Correct Spline Slope", description: "Clamps the local slope on each spline point.", wbModules: {"WorldEditor"}, awesomeFontCode:0xf715)]
 class DAB_CorrectSelectedSplineSlopeTool: WorldEditorTool
 {
-	[Attribute("1", UIWidgets.ComboBox, "Fixed Spline End Point","", ParamEnumArray.FromEnum(FixedSplineEndPoint))]
+	[Attribute(defvalue: "1", desc: "Decides if the heighest or lowest point will stay fixed. The other one might be moved!", category: "Slope Correction", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(FixedSplineEndPoint))]
 	protected FixedSplineEndPoint m_fixedPoint;
 	
-	[Attribute(defvalue: "1", desc: "Minimal local slope")]
+	[Attribute(defvalue: "false", desc: "Copy the old tangents to the moved points, otherwise they will be reset!", category: "Slope Correction", uiwidget: UIWidgets.CheckBox)]
+	protected bool m_keepTangents;
+	
+	[Attribute(defvalue: "1", desc: "Minimal local slope", category: "Slope Correction")]
 	protected float m_minSlope;
 	
-	[Attribute(defvalue: "70", desc: "Maximum local slope")]
+	[Attribute(defvalue: "70", desc: "Maximum local slope", category: "Slope Correction")]
 	protected float m_maxSlope;
 	
 	//------------------------------------------------------------------------------------------------
@@ -147,7 +150,7 @@ class DAB_CorrectSelectedSplineSlopeTool: WorldEditorTool
 		Print("startHeight: " + startHeight + "; endHeight: " + endHeight);
 		
 		int adjustedPointCount = 0;
-		bool goingUphill = m_fixedPoint == FixedSplineEndPoint.FIX_END;
+		bool goingUphill = m_fixedPoint == FixedSplineEndPoint.FIX_LOWEST_POINT;
 		bool countFromBackToFront = (goingUphill && (endHeight < startHeight)) 
 									|| (!goingUphill && (endHeight > startHeight));
 		
@@ -226,56 +229,42 @@ class DAB_CorrectSelectedSplineSlopeTool: WorldEditorTool
 				tangents.Insert(outTan);
 			}
 			
-			Print("tangents[0]: " + tangents[0].ToString());
-			
-			m_API.BeginEntityAction("CorrectingSplineElevation", "");
-			spline.SetPointsSpline(positions,splineSrc,1,1,0);
-			BaseContainerList points = splineSrc.GetObjectArray("Points");
-			for (int j = 0; j < points.Count(); j++){
-				BaseContainer point = points[j];
-				BaseContainerList pointData = point.GetObjectArray("Data");
-				
-				if (pointData.Count() == 0)
-				{
-					m_API.CreateObjectArrayVariableMember(point, null, "Data", "SplinePointData", 0);
-				}
 
-				array<ref ContainerIdPathEntry> containerPath = {ContainerIdPathEntry("Points", j), ContainerIdPathEntry("Data", 0)};
-				
-				vector inTangent = tangents[j * 2];
-				vector outTangent = tangents[(j * 2) + 1];
-				
-				m_API.SetVariableValue(splineSrc, containerPath, "InTangent", inTangent.ToString(false));	
-				m_API.SetVariableValue(splineSrc, containerPath, "OutTangent", outTangent.ToString(false));		
-			}
+			m_API.BeginEntityAction("CorrectingSplineElevation", "");
+			
+			DAB_ShapeHelper.ModifyPolyline(splineSrc, positions);
+			
+			if(m_keepTangents)
+				CopyTangents(splineSrc, tangents);
+			
+			DAB_ShapeHelper.FixTerrainAdjustmentGenerators(splineSrc);
 			
 			m_API.EndEntityAction("CorrectingSplineElevation");
-			
-			FixChildRoads(splineSrc);
 		}
 		
 		Print("Adjusted " + adjustedPointCount + "/" + positions.Count() + " points of the Spline.");
 	}
 	
-	//------------------------------------------------------------------------------------------------
-	//TODO: Improve this hacky 'solution'
-	protected void FixChildRoads(notnull IEntitySource parent){
-		array<IEntitySource> allRoadsGenerators = {};
-		DAB_Helper.GetAllChildrenOfType((typename) RoadGeneratorEntity, parent, allRoadsGenerators);
+	protected void CopyTangents(IEntitySource splineSrc, array<vector> tangents)
+	{
+		BaseContainerList points = splineSrc.GetObjectArray("Points");
 		
-		for (int i = 0; i < allRoadsGenerators.Count(); i++)
-		{
-			IEntitySource childSrc = allRoadsGenerators[i];
+		for (int j = 0; j < points.Count(); j++){
+			BaseContainer point = points[j];
+			BaseContainerList pointData = point.GetObjectArray("Data");
 			
-			RoadGeneratorEntity childRoadEntity = RoadGeneratorEntity.Cast(m_API.SourceToEntity(childSrc));
-			if (!childRoadEntity)
+			if (pointData.Count() == 0)
 			{
-				Print("Child Road was not road!", LogLevel.WARNING);
-				continue;
+				m_API.CreateObjectArrayVariableMember(point, null, "Data", "SplinePointData", 0);
 			}
+
+			array<ref ContainerIdPathEntry> containerPath = {ContainerIdPathEntry("Points", j), ContainerIdPathEntry("Data", 0)};
 			
-			childRoadEntity._WB_OnCreate(parent);
-			Print("Adjusted road.");
+			vector inTangent = tangents[j * 2];
+			vector outTangent = tangents[(j * 2) + 1];
+			
+			m_API.SetVariableValue(splineSrc, containerPath, "InTangent", inTangent.ToString(false));	
+			m_API.SetVariableValue(splineSrc, containerPath, "OutTangent", outTangent.ToString(false));		
 		}
 	}
 
