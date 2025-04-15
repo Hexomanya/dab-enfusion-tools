@@ -1,6 +1,6 @@
 #ifdef WORKBENCH
 
-[WorkbenchPluginAttribute( name: "Fix Road Mat Sort Settings", category: "DAB - Misc", description: "Uses Road Sort Order instead of Mat Sort bias in selected Roads", wbModules: {"WorldEditor"}, awesomeFontCode: 0xF4DB)]
+[WorkbenchPluginAttribute( name: "Fix Road Mat Sort Settings", description: "Uses Road Sort Order instead of Mat Sort bias in selected Roads", category: "DAB - Misc", wbModules: {"WorldEditor"}, awesomeFontCode: 0xF4DB)]
 class DAB_RoadMatSortFixPlugin : WorkbenchPlugin
 {
 	WorldEditorAPI m_API;

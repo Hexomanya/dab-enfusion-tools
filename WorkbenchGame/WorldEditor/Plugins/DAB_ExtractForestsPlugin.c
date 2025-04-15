@@ -3,7 +3,7 @@
 
 //WARNING THIS IS VERY SLOW BECAUSE WE HAVE TO UNPARENT EACH ENTITY ONE BY ONE
 //A BETTER WORKFLOW IS TO USE: SELECT CHILDREN -> REMOVE FROM PARENT -> CHANGE ABSOLUTE TO Y TO RELATIVE
-[WorkbenchPluginAttribute( name: "Extract Forests", description: "Removes generated Entities from selected Generator-Parents", wbModules: {"WorldEditor"}, awesomeFontCode: 0xF1BB)]
+[WorkbenchPluginAttribute( name: "Extract Forests", description: "Removes generated Entities from selected Generator-Parents", category: "DAB - Misc", wbModules: {"WorldEditor"}, awesomeFontCode: 0xF1BB)]
 class ExtractObjectsFromForestGeneratorPlugin : WorkbenchPlugin
 {
     override void Run()

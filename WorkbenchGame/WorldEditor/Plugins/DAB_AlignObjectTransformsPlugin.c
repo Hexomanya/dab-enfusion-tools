@@ -1,6 +1,6 @@
 #ifdef WORKBENCH
 
-[WorkbenchPluginAttribute( name: "Copy Transform", category: "DAB - Misc", description: "Copies transform data to selected objects", shortcut: "Ctrl+Shift+W", wbModules: {"WorldEditor"}, awesomeFontCode: 0xF24D)]
+[WorkbenchPluginAttribute( name: "Copy Transform", description: "Copies transform data to selected objects", category: "DAB - Misc", shortcut: "Ctrl+Shift+W", wbModules: {"WorldEditor"}, awesomeFontCode: 0xF24D)]
 class AlignObjectTransformsToLastSelectedPlugin : WorkbenchPlugin
 {
     override void Run()
