@@ -13,24 +13,22 @@ class DAB_PrefabRadomizerTool : WorldEditorTool
 	protected ref DAB_PrefabRandomizerConfig m_config;
 	
 	//------------------ Selection -------------------------------------------------------------------
-	[Attribute(defvalue: "0", desc: "How you want to select the objects", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(DAB_SelectionType), category: "Selection")]
+	[Attribute(defvalue: "0", desc: "How you want to select the objects", category: "Selection", uiwidget: UIWidgets.ComboBox,  enums: ParamEnumArray.FromEnum(DAB_SelectionType))]
 	protected DAB_SelectionType m_selectionType;
 	
-	[Attribute(defvalue: "100", desc: "The selection radius from the camera", uiwidget: UIWidgets.Slider , params: "0 500 1", category: "Selection")]
+	[Attribute(defvalue: "100", desc: "The selection radius from the camera", category: "Selection", uiwidget: UIWidgets.Slider , params: "0 500 1", )]
 	protected float m_selectionRadius;
 	
-	[Attribute(defvalue: "false", desc: "Keep already selected entities selected", uiwidget: UIWidgets.CheckBox, category: "Selection")]
+	[Attribute(defvalue: "false", desc: "Keep already selected entities selected", category: "Selection", uiwidget: UIWidgets.CheckBox, )]
 	protected bool m_keepSelection;
 	
-	[Attribute(defvalue: "true", desc: "Also select objects that are defined as replacer", uiwidget: UIWidgets.CheckBox, category: "Selection")]
+	[Attribute(defvalue: "true", desc: "Also select objects that are defined as replacer",  category: "Selection", uiwidget: UIWidgets.CheckBox,)]
 	protected bool m_selectReplacers;
 	
+	//------------------ Local Variables -------------------------------------------------------------
 	protected BaseWorld m_World;
-	
 	protected const ref array<IEntitySource> m_tempQueryInsert = {};
-	
 	protected ref map<string, int> m_prefabConfigIndexMap = new map<string, int>();
-	
 	protected ref array<int> m_placeInOrderCounters = {};
 	
 	//------------------------------------------------------------------------------------------------

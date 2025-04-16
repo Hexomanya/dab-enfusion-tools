@@ -8,6 +8,7 @@ enum FixedSplineEndPoint {
 [WorkbenchToolAttribute( name: "Correct Spline Slope", description: "Clamps the local slope on each spline point.", wbModules: {"WorldEditor"}, awesomeFontCode:0xf715)]
 class DAB_CorrectSelectedSplineSlopeTool: WorldEditorTool
 {
+	//------------------ Slope Correction -----------------------------------------------------------
 	[Attribute(defvalue: "1", desc: "Decides if the heighest or lowest point will stay fixed. The other one might be moved!", category: "Slope Correction", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(FixedSplineEndPoint))]
 	protected FixedSplineEndPoint m_fixedPoint;
 	
@@ -19,16 +20,6 @@ class DAB_CorrectSelectedSplineSlopeTool: WorldEditorTool
 	
 	[Attribute(defvalue: "70", desc: "Maximum local slope", category: "Slope Correction")]
 	protected float m_maxSlope;
-	
-	//------------------------------------------------------------------------------------------------
-	protected override void OnActivate()
-	{
-	}
-
-	//------------------------------------------------------------------------------------------------
-	protected override void OnDeActivate()
-	{
-	}
 	
 	//------------------------------------------------------------------------------------------------
 	[ButtonAttribute("Analyze Splines")]

@@ -2,17 +2,21 @@
 [WorkbenchToolAttribute(name: "Select Objects over Surface",description: "Selects objects over the defined Terrain Surfaces",wbModules: {"WorldEditor"}, awesomeFontCode: 0xF12D)]
 class DAB_ObjectOverSurfaceRemover : WorldEditorTool
 {
-	[Attribute(defvalue: "", desc: "Blacklisted Surfaces")]
-	protected ref array<ResourceName> m_blacklistedSurfaces;
+	//------------------ Surface Materials -----------------------------------------------------------
+	[Attribute(defvalue: "", desc: "Select objects over these surfaces",  category: "Surface Materials", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "emat")]
+	protected ref array<ResourceName> m_selectionSurfaces;
 	
-	[Attribute(defvalue: "0", uiwidget: UIWidgets.CheckBox, desc: "If enabled, also selects objects above roads", category: "Terrain")]
+	//------------------ Terrain Properties ----------------------------------------------------------
+	[Attribute(defvalue: "0", uiwidget: UIWidgets.CheckBox, desc: "If enabled, also selects objects above roads", category: "Terrain Properties")]
 	private bool m_roadSelection;
 	
-	[Attribute(defvalue: "0", uiwidget: UIWidgets.CheckBox, desc: "If enabled, also selects objects above rivers", category: "Terrain")]
+	[Attribute(defvalue: "0", uiwidget: UIWidgets.CheckBox, desc: "If enabled, also selects objects above rivers", category: "Terrain Properties")]
 	private bool m_riverSelection;
 	
+	//------------------ Local Variables -------------------------------------------------------------
 	protected BaseWorld m_World;
 	
+	//------------------------------------------------------------------------------------------------
 	protected string GetSurfaceMaterial(vector pos)
 	{
 		if(!m_World){
@@ -52,7 +56,7 @@ class DAB_ObjectOverSurfaceRemover : WorldEditorTool
 	[ButtonAttribute("Select Entities")]
 	protected void SelectEntities()
 	{
-		if(m_blacklistedSurfaces.Count() < 1){
+		if(m_selectionSurfaces.Count() < 1){
 			Print("You need to set a surface first!", LogLevel.WARNING);
 			return;
 		}
@@ -79,7 +83,7 @@ class DAB_ObjectOverSurfaceRemover : WorldEditorTool
 	}
 	
 	protected bool IsOnBlacklistedSurfaces(string pathName){
-		foreach(ResourceName blacklistSurface: m_blacklistedSurfaces)
+		foreach(ResourceName blacklistSurface: m_selectionSurfaces)
 		{
 			if(blacklistSurface.GetPath() == pathName) return true;
 		}

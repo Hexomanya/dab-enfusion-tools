@@ -2,12 +2,14 @@
 [WorkbenchToolAttribute("(Fixed) Polyline Area Tool", "Turns polylines into polyline areas, select a polyline, then click 'Convert'", awesomeFontCode: 0xF6C8)]
 class DAB_PolylineAreaTool : WorldEditorTool
 {
+	//------------------ Rectangle Settings ----------------------------------------------------------
 	[Attribute(defvalue: "5", category: "Rectangle Settings")]
 	protected float m_fRectangleWidth;
 
 	[Attribute(defvalue: "3", category: "Rectangle Settings")]
 	protected float m_fRectangleHeight;
 
+	//------------------ Circle Materials ------------------------------------------------------------
 	[Attribute(defvalue: "3", category: "Circle Settings")]
 	protected float m_fCircleRadius;
 
