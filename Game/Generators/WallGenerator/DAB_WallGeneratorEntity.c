@@ -1,5 +1,5 @@
 #ifdef WORKBENCH
-modded class WallGeneratorEntity
+/*modded class WallGeneratorEntity
 {
 	override void Generate()
 	{
@@ -72,5 +72,5 @@ modded class WallGeneratorEntity
 		s_World = null; // see? I told you - used wisely
 	}
 }
-
+*/
 #endif
